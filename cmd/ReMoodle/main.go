@@ -41,4 +41,30 @@ func main() {
 		fmt.Printf("Course Name: %s\nDeadline Name: %s\nRemaining Time: %d\n", deadline.CourseName, deadline.DeadlineName, deadline.Remaining)
 	}
 
+	//TODO Convert GPT ideas to real code
+	//// Define the Moodle API URL and token
+	//moodleAPILink := "https://moodle.astanait.edu.kz/webservice/rest/server.php"
+	//token := "your-moodle-token"
+	//
+	//// Create a Moodle repository
+	//repo := moodle.NewMoodleRepository(moodleAPILink)
+	//
+	//// Define the local file path, file name, and the URL for file upload
+	//filePath := "/path/to/your/file.pdf" // Replace with the actual file path
+	//fileName := "file.pdf"
+	//uploadURL := "https://your-moodle-site/upload/file.php" // Replace with the actual upload URL
+	//
+	//// Upload the file
+	//response, err := repo.UploadFile(token, filePath, fileName, uploadURL)
+	//if err != nil {
+	//	log.Fatalf("File upload failed: %v", err)
+	//}
+	//
+	//// Check the response
+	//if exception, ok := response["exception"].(string); ok {
+	//	fmt.Printf("File upload failed with exception: %s\n", exception)
+	//} else {
+	//	fmt.Println("File uploaded successfully.")
+	//}
+
 }
