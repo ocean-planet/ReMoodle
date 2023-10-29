@@ -21,7 +21,7 @@ func (d *DeadlineCommand) Execute(args []string) error {
 	moodleRepository := moodle.NewMoodleRepository(apiToken)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
-	userInfo, tokenError := moodleRepository.GetUserInfo(apiToken)
+	_, tokenError := moodleRepository.GetUserInfo(apiToken)
 	if tokenError != nil {
 		fmt.Println("Token is invalid!")
 		return nil
