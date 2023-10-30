@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 	"log"
+
+	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
 func main() {

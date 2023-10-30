@@ -2,6 +2,7 @@ package help
 
 import (
 	"fmt"
+
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
 )
 
