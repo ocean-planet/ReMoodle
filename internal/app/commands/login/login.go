@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
+	"github.com/ocean-planet/ReMoodle/internal/app/core"
 )
 
 type LoginCommand struct {
@@ -25,7 +25,7 @@ func (h *LoginCommand) Execute(_ []string) error {
 
 	token = strings.TrimSpace(token)
 
-	err = SaveToken(token)
+	err = core.SaveToken(token)
 	if err != nil {
 		return err
 	}
@@ -37,36 +37,4 @@ func (h *LoginCommand) Execute(_ []string) error {
 
 func (h *LoginCommand) Description() string {
 	return "Login to Moodle"
-}
-
-func SaveToken(token string) error {
-	configDir, err := os.UserConfigDir()
-	if err != nil {
-		return err
-	}
-
-	tokenFile := filepath.Join(configDir, "remoodle", "token")
-	err = os.MkdirAll(filepath.Dir(tokenFile), 0755)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(tokenFile, []byte(token), 0600)
-}
-
-func LoadToken() (string, error) {
-	configDir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-
-	println(configDir)
-
-	tokenFile := filepath.Join(configDir, "remoodle", "token")
-	data, err := os.ReadFile(tokenFile)
-	if err != nil {
-		return "", err
-	}
-
-	return string(data), nil
 }
