@@ -112,7 +112,7 @@ func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
 }
 
 func (r *MoodleRepository) GetDeadlines(token string) ([]Deadline, error) {
-	url := fmt.Sprintf("%s&wstoken=%s&wsfunction=core_calendar_get_calendar_upcoming_view&moodlewsrestformat=json", r.MoodleAPILink, token)
+	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_calendar_get_calendar_upcoming_view&moodlewsrestformat=json", r.MoodleAPILink, token)
 	fmt.Println("URL:", url)
 
 	resp, err := http.Get(url)
