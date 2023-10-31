@@ -2,8 +2,11 @@ package deadlines
 
 import (
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
+	"github.com/ocean-planet/ReMoodle/internal/app/core"
 	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
@@ -12,38 +15,36 @@ type DeadlineCommand struct {
 }
 
 func (d *DeadlineCommand) Execute(args []string) error {
-	if len(args) > 1 {
-		fmt.Println("Usage: remoodle -d 'moodletoken'")
+	token, tokenErr := core.LoadToken()
+
+	if (tokenErr != nil) {
+		return tokenErr
 	}
 
-	apiToken := args[0]
-
-	moodleRepository := moodle.NewMoodleRepository(apiToken)
+	moodleRepository := moodle.NewMoodleRepository("https://moodle.astanait.edu.kz/webservice/rest/server.php")
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
-	_, tokenError := moodleRepository.GetUserInfo(apiToken)
-	if tokenError != nil {
-		fmt.Println("Token is invalid!")
-		return nil
-	}
-
-	deadlines, err := moodleService.GetDeadlines(apiToken)
+	deadlines, err := moodleService.GetDeadlines(token)
 
 	if err != nil {
-		fmt.Println("Moodle API is currently unavailable, try again later")
+		fmt.Println("Moodle is currently unavailable, try again later")
 		return err
 	}
 
 	if len(deadlines) < 1 {
-		fmt.Println("Congratulations! There is no available deadlines")
+		fmt.Println("Congratulations! There is no deadlines at the moment for you")
 		return nil
 	}
 
-	fmt.Println("> ------- < Current Deadlines > ------- <")
+	fmt.Println("> ------- Current Deadlines ------- <")
 
 	for _, deadline := range deadlines {
-		fmt.Println("> " + deadline.DeadlineName + " | " + deadline.CourseName)
-		// fmt.Printf("  Date: " + deadline.Remaining + " | Time left: " + deadline.Remaining)
+
+		if strings.Contains(strings.ToLower(deadline.DeadlineName), "attendance") {
+			continue
+		}
+
+		fmt.Println("> " + deadline.DeadlineName + " | Date: " + GetDateString(deadline.Remaining) + " | Time left: " + getRemainingString(deadline.Remaining))
 	}
 
 	return nil
@@ -51,4 +52,27 @@ func (d *DeadlineCommand) Execute(args []string) error {
 
 func (d *DeadlineCommand) Description() string {
 	return "shows all active deadlines"
+}
+
+func GetDateString(unixtimestamp int64) string {
+	deadlineTime := time.Unix(unixtimestamp, 0)
+	return deadlineTime.Format("2006-01-02 15:04:05")
+}
+
+func getRemainingString(unixtimestamp int64) string {	
+	finalString := "Time left: "
+
+	currentTime := time.Now()
+	deadlineTime := time.Unix(unixtimestamp, 0)
+	timeDelta := deadlineTime.Sub(currentTime)
+
+	if (timeDelta.Hours() > 24) {
+		finalString += string(int32(timeDelta.Hours()) / 24) + " days, "
+	}
+
+	finalString += string(int32(timeDelta.Hours()) % 24) + "h "
+	finalString += string(int32(timeDelta.Minutes())) + "m "
+	finalString += string(int32(timeDelta.Seconds())) + "s "
+
+	return finalString
 }
