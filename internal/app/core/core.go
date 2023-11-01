@@ -2,10 +2,11 @@ package core
 
 import (
 	"fmt"
-	"github.com/ocean-planet/ReMoodle/internal/app/logger"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ocean-planet/ReMoodle/internal/app/logger"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
 )

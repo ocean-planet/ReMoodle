@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/courses"
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/deadlines"
@@ -10,7 +12,6 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/logout"
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/whoami"
 	"github.com/ocean-planet/ReMoodle/internal/app/core"
-	"os"
 )
 
 func main() {
