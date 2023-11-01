@@ -22,3 +22,10 @@ type Deadline struct {
 	DeadlineName string `json:"deadline_name"`
 	Remaining    int64  `json:"remaining"`
 }
+
+type Grade struct {
+	GradeName   string
+	Value       float64
+	MaxValue    float64
+	UpdatedDate int64
+}
