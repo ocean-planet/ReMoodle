@@ -16,13 +16,14 @@ type LoginCommand struct {
 }
 
 func (h *LoginCommand) Execute(_ []string) error {
-	fmt.Println("Enter your token:")
 
-	_, tokenExistsErr := core.LoadToken()
+	loadToken, loadTokenErr := core.LoadToken()
 
-	if tokenExistsErr != nil {
-		fmt.Println("You are already logged in!")
+	if loadTokenErr != nil || len(loadToken) > 5 {
+		fmt.Printf("You are already logged in!\nYour token: %s", loadToken)
+		return loadTokenErr
 	}
+	fmt.Println("Enter your token:")
 
 	reader := bufio.NewReader(os.Stdin)
 	token, err := reader.ReadString('\n')
