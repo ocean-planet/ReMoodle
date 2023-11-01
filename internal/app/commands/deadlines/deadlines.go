@@ -45,8 +45,9 @@ func (d *DeadlineCommand) Execute(args []string) error {
 			continue
 		}
 
-		fmt.Println("> " + deadline.DeadlineName + " | " + strings.Split(deadline.CourseName, " | ")[0] + " | Date: " + GetDateString(deadline.Remaining) + " | Time left: " + GetRemainingString(deadline.Remaining))
+		fmt.Println("> 📋 " + deadline.DeadlineName + " | 📚 " + strings.Split(deadline.CourseName, " | ")[0] + " | 📅 Date: " + GetDateString(deadline.Remaining) + " | ⌚ Time left: " + GetRemainingString(deadline.Remaining))
 	}
+	fmt.Println()
 
 	return nil
 }
