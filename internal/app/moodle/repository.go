@@ -3,6 +3,7 @@ package moodle
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -61,8 +62,95 @@ func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
 	} else {
 		return nil, fmt.Errorf("invalid token")
 	}
+}
 
-	
+func (r *MoodleRepository) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
+	// gradereport_user_get_grade_items
+
+	user, err := r.GetUserInfo(token)
+	if err != nil {
+		return nil, err
+	}
+	userID := user.UserID
+
+	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&userid=%s&courseid=%s", r.MoodleAPILink, token, userID, courseID)
+	fmt.Println("URL:", url)
+
+	resp, err := http.Get(url)
+
+	if err != nil {
+		fmt.Println("Error making HTTP request:", err)
+		return nil, err
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Printf("Error closing response body: %v\n", err)
+		}
+	}(resp.Body)
+
+	fmt.Println("Response Status Code:", resp.Status)
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("moodle API request failed with status code %d", resp.StatusCode)
+	}
+
+	var response map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		fmt.Println("Error decoding JSON response:", err)
+		return nil, err
+	}
+
+	data, ok := response["usergrades"].([]interface{})
+
+	if !ok || len(data) == 0 {
+		fmt.Println("User's grades not of the expected type")
+		return nil, err
+	}
+
+	userGrades, ok := data[0].(map[string]interface{})
+	if !ok {
+		return nil, err
+	}
+
+	gradeItems, ok := userGrades["gradeitems"].([]interface{})
+	if !ok {
+		fmt.Println("Grade items not of the expected type")
+		return nil, err
+	}
+
+	grades := make([]Grade, len(gradeItems))
+
+	for i, gradeDataInterface := range gradeItems {
+		gradeData, ok := gradeDataInterface.(map[string]interface{})
+		if !ok {
+			fmt.Println("Grade data not of the expected type")
+			return nil, errors.New("grade data not of the expected type")
+		}
+
+		if gradeData["graderaw"] == nil {
+			gradeData["graderaw"] = 0.0
+			gradeData["gradedategraded"] = 0.0
+		}
+		
+		grade := Grade{
+			GradeName: gradeData["itemname"].(string),
+			Value: gradeData["graderaw"].(float64),
+			MaxValue: gradeData["grademax"].(float64),
+			UpdatedDate: int64(gradeData["gradedategraded"].(float64)),
+			
+			// ID:                int(courseData["id"].(float64)),
+			// Name:              courseData["displayname"].(string),
+			// EnrolledUserCount: int(courseData["enrolledusercount"].(float64)),
+			// Category:          strconv.FormatFloat(courseData["category"].(float64), 'f', -1, 64),
+			// EndDate: 		   int64(courseData["enddate"].(float64)),
+		}
+		grades[i] = grade
+	}
+
+	return grades, nil
 }
 
 func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {

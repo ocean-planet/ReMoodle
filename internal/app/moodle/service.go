@@ -22,6 +22,10 @@ func (s *MoodleService) GetDeadlines(token string) ([]Deadline, error) {
 	return s.Repository.GetDeadlines(token)
 }
 
+func (s *MoodleService) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
+	return s.Repository.GetUserCourseGrades(token, courseID)
+}
+
 //// HTTP Handlers
 //func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 //	// Обработчик для получения информации о пользователе
