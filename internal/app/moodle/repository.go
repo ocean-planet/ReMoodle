@@ -50,13 +50,19 @@ func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
 		return nil, err
 	}
 
-	user := &User{
-		Barcode:  response["username"].(string),
-		FullName: response["fullname"].(string),
-		UserID:   strconv.FormatFloat(response["userid"].(float64), 'f', -1, 64),
+	if _, exists := response["username"]; exists {
+		user := &User{
+			Barcode:  response["username"].(string),
+			FullName: response["fullname"].(string),
+			UserID:   strconv.FormatFloat(response["userid"].(float64), 'f', -1, 64),
+		}
+	
+		return user, nil
+	} else {
+		return nil, fmt.Errorf("wrong token")
 	}
 
-	return user, nil
+	
 }
 
 func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
