@@ -2,6 +2,7 @@ package deadlines
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -36,7 +37,7 @@ func (d *DeadlineCommand) Execute(args []string) error {
 		return nil
 	}
 
-	fmt.Println("> ------- Current Deadlines ------- <")
+	fmt.Println("Current Deadlines:")
 
 	for _, deadline := range deadlines {
 
@@ -44,7 +45,7 @@ func (d *DeadlineCommand) Execute(args []string) error {
 			continue
 		}
 
-		fmt.Println("> " + deadline.DeadlineName + " | Date: " + GetDateString(deadline.Remaining) + " | Time left: " + getRemainingString(deadline.Remaining))
+		fmt.Println("> " + deadline.DeadlineName + " | " + strings.Split(deadline.CourseName, " | ")[0] + " | Date: " + GetDateString(deadline.Remaining) + " | Time left: " + GetRemainingString(deadline.Remaining))
 	}
 
 	return nil
@@ -59,20 +60,20 @@ func GetDateString(unixtimestamp int64) string {
 	return deadlineTime.Format("2006-01-02 15:04:05")
 }
 
-func getRemainingString(unixtimestamp int64) string {	
-	finalString := "Time left: "
+func GetRemainingString(unixtimestamp int64) string {	
+	finalString := ""
 
 	currentTime := time.Now()
 	deadlineTime := time.Unix(unixtimestamp, 0)
 	timeDelta := deadlineTime.Sub(currentTime)
 
-	if (timeDelta.Hours() > 24) {
-		finalString += string(int32(timeDelta.Hours()) / 24) + " days, "
+	if timeDelta.Hours() > 24 {
+		finalString += strconv.Itoa(int(timeDelta.Hours())/24) + " days, "
 	}
 
-	finalString += string(int32(timeDelta.Hours()) % 24) + "h "
-	finalString += string(int32(timeDelta.Minutes())) + "m "
-	finalString += string(int32(timeDelta.Seconds())) + "s "
+	finalString += strconv.Itoa(int(timeDelta.Hours())%24) + "h "
+	finalString += strconv.Itoa(int(timeDelta.Minutes())%60) + "m "
+	finalString += strconv.Itoa(int(timeDelta.Seconds())%60) + "s "
 
 	return finalString
 }
