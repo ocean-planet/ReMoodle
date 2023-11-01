@@ -103,6 +103,7 @@ func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
 			Name:              courseData["displayname"].(string),
 			EnrolledUserCount: int(courseData["enrolledusercount"].(float64)),
 			Category:          strconv.FormatFloat(courseData["category"].(float64), 'f', -1, 64),
+			EndDate: 		   int64(courseData["enddate"].(float64)),
 			// You may need to handle other fields like 'completed', 'start_date', and 'end_date' based on your response structure.
 		}
 		courses[i] = course
