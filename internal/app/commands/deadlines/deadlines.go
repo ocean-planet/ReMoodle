@@ -2,8 +2,10 @@ package deadlines
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 	"time"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
@@ -39,14 +41,24 @@ func (d *DeadlineCommand) Execute(args []string) error {
 
 	fmt.Println("Current Deadlines:")
 
+	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
+
 	for _, deadline := range deadlines {
 
 		if strings.Contains(strings.ToLower(deadline.DeadlineName), "attendance") {
 			continue
 		}
 
-		fmt.Println("> 📋 " + deadline.DeadlineName + " | 📚 " + strings.Split(deadline.CourseName, " | ")[0] + " | 📅 Date: " + GetDateString(deadline.Remaining) + " | ⌚ Time left: " + GetRemainingString(deadline.Remaining))
+		row := fmt.Sprintf("📋 %s\t📚 %s\t📅 Date: %s\t⌚ Time left: %s",
+            deadline.DeadlineName,
+            strings.Split(deadline.CourseName, " | ")[0],
+            GetDateString(deadline.Remaining),
+            GetRemainingString(deadline.Remaining),
+        )
+
+        fmt.Fprintln(tw, row)
 	}
+    tw.Flush()
 	fmt.Println()
 
 	return nil
