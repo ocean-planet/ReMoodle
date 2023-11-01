@@ -22,7 +22,7 @@ func NewMoodleRepository(apiLink string) *MoodleRepository {
 }
 
 func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
-	url := fmt.Sprintf("%s&wstoken=%s&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json", r.MoodleAPILink, token)
+	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json", r.MoodleAPILink, token)
 	fmt.Println("URL:", url) // Debugging: Print the URL
 
 	resp, err := http.Get(url)

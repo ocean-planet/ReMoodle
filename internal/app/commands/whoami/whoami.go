@@ -20,14 +20,14 @@ func (h *WhoamiCommand) Execute(_ []string) error {
 		return err
 	}
 
-	apiLink := "https://moodle.astanait.edu.kz/webservice/rest/server.php?wstoken=" + token
+	apiLink := "https://moodle.astanait.edu.kz/webservice/rest/server.php"
 	repo := moodle.NewMoodleRepository(apiLink)
 
 	userInfo, err := repo.GetUserInfo(token)
 	if err != nil {
 		log.Fatalf("Error getting user info: %v", err)
 	}
-	fmt.Printf("User Info:\nBarcode: %s\nFull Name: %s\nUser ID: %s\n", userInfo.Barcode, userInfo.FullName, userInfo.UserID)
+	fmt.Printf("User Info:\n> Barcode: %s\n> Full Name: %s\n> User ID: %s\n", userInfo.Barcode, userInfo.FullName, userInfo.UserID)
 
 	return nil
 }
