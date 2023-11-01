@@ -66,7 +66,7 @@ func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
 	}
 	userID := user.UserID
 
-	url := fmt.Sprintf("%s&wstoken=%s&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=%s", r.MoodleAPILink, token, userID)
+	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=%s", r.MoodleAPILink, token, userID)
 	fmt.Println("URL:", url)
 
 	resp, err := http.Get(url)
