@@ -19,7 +19,7 @@ func (h *LoginCommand) Execute(_ []string) error {
 
 	loadToken, loadTokenErr := core.LoadToken()
 
-	if loadTokenErr != nil || len(loadToken) > 5 {
+	if loadTokenErr == nil || len(loadToken) > 5 {
 		fmt.Printf("You are already logged in!\nYour token: %s", loadToken)
 		return loadTokenErr
 	}
