@@ -49,7 +49,7 @@ func (d *DeadlineCommand) Execute(args []string) error {
 			continue
 		}
 
-		row := fmt.Sprintf("📋 %s\t📚 %s\t📅 Date: %s\t⌚ Time left: %s",
+		row := fmt.Sprintf("📋  %s\t 📚  %s\t 📅 Date: %s\t ⌚ Time left: %s",
             deadline.DeadlineName,
             strings.Split(deadline.CourseName, " | ")[0],
             GetDateString(deadline.Remaining),

@@ -3,6 +3,8 @@ package whoami
 import (
 	"fmt"
 	"log"
+	"os"
+	"text/tabwriter"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
 	"github.com/ocean-planet/ReMoodle/internal/app/core"
@@ -27,7 +29,12 @@ func (h *WhoamiCommand) Execute(_ []string) error {
 	if err != nil {
 		log.Fatalf("Error getting user info: %v", err)
 	}
-	fmt.Printf("User Info:\n> Barcode: %s\n> Full Name: %s\n> User ID: %s\n", userInfo.Barcode, userInfo.FullName, userInfo.UserID)
+
+	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
+	row := fmt.Sprintf("User Info:\nBarcode \t %s\nFull Name \t %s\nUser ID \t %s\n", userInfo.Barcode, userInfo.FullName, userInfo.UserID)
+
+	fmt.Fprintln(tw, row)
+	tw.Flush()
 
 	return nil
 }
