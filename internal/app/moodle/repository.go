@@ -59,7 +59,7 @@ func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
 	
 		return user, nil
 	} else {
-		return nil, fmt.Errorf("wrong token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
 	

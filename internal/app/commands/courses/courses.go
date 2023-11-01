@@ -31,12 +31,12 @@ func (c *CoursesCommand) Execute(args []string) error {
 	courses, err := moodleService.GetUserAllCourses(token)
 
 	if err != nil {
-		fmt.Println("Moodle is currently unavailable, try again later")
+		fmt.Println("Moodle API is currently unavailable, try again later")
 		return err
 	}
 
 	if len(courses) < 1 {
-		fmt.Println("Courses wasn't found")
+		fmt.Println("Courses were not found")
 		return nil
 	}
 
