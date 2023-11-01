@@ -80,3 +80,19 @@ func LoadToken() (string, error) {
 
 	return strings.TrimSpace(string(data)), nil
 }
+
+func DeleteToken() error {
+    configDir, err := os.UserConfigDir()
+    if err != nil {
+        return err
+    }
+
+    tokenFile := filepath.Join(configDir, ConfigDirName, TokenFileName)
+    err = os.Remove(tokenFile)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
