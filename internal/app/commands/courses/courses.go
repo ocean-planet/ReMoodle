@@ -9,15 +9,15 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
-type CoursesCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (*CoursesCommand) Description() string {
+func (c *Command) Description() string {
 	return "Shows current courses"
 }
 
-func (c *CoursesCommand) Execute(_ []string) error {
+func (c *Command) Execute(_ []string) error {
 	token, tokenErr := core.LoadToken()
 
 	if tokenErr != nil {

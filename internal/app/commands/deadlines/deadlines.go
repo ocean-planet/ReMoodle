@@ -13,18 +13,18 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
-type DeadlineCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (d *DeadlineCommand) Execute(_ []string) error {
+func (c *Command) Execute(_ []string) error {
 	token, tokenErr := core.LoadToken()
 
 	if tokenErr != nil {
 		return tokenErr
 	}
 
-	moodleRepository := moodle.NewMoodleRepository(d.CommandService.ApiLink)
+	moodleRepository := moodle.NewMoodleRepository(c.CommandService.ApiLink)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
 	deadlines, err := moodleService.GetDeadlines(token)
@@ -57,11 +57,11 @@ func (d *DeadlineCommand) Execute(_ []string) error {
 		)
 
 		if _, err := fmt.Fprintln(tw, row); err != nil {
-			return fmt.Errorf("Error writing to tabwriter: %v", err)
+			return fmt.Errorf("error writing to tabwriter: %v", err)
 		}
 	}
 	if err := tw.Flush(); err != nil {
-		return fmt.Errorf("Error flushing tabwriter: %v", err)
+		return fmt.Errorf("error flushing tabwriter: %v", err)
 	}
 
 	fmt.Println()
@@ -69,7 +69,7 @@ func (d *DeadlineCommand) Execute(_ []string) error {
 	return nil
 }
 
-func (d *DeadlineCommand) Description() string {
+func (c *Command) Description() string {
 	return "Shows all active deadlines"
 }
 

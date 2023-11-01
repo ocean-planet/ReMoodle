@@ -7,15 +7,15 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/core"
 )
 
-type LogoutCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (l *LogoutCommand) Description() string {
+func (c *Command) Description() string {
 	return "Delete your token"
 }
 
-func (l *LogoutCommand) Execute(_ []string) error {
+func (c *Command) Execute(_ []string) error {
 	loadToken, loadTokenErr := core.LoadToken()
 
 	if loadTokenErr != nil || len(loadToken) > 5 {

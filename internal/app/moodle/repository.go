@@ -12,17 +12,17 @@ import (
 	"strconv"
 )
 
-type MoodleRepository struct {
+type Repository struct {
 	MoodleAPILink string
 }
 
-func NewMoodleRepository(apiLink string) *MoodleRepository {
-	return &MoodleRepository{
+func NewMoodleRepository(apiLink string) *Repository {
+	return &Repository{
 		MoodleAPILink: apiLink,
 	}
 }
 
-func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
+func (r *Repository) GetUserInfo(token string) (*User, error) {
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json", r.MoodleAPILink, token)
 	fmt.Println("URL:", url) // Debugging: Print the URL
 
@@ -57,14 +57,14 @@ func (r *MoodleRepository) GetUserInfo(token string) (*User, error) {
 			FullName: response["fullname"].(string),
 			UserID:   strconv.FormatFloat(response["userid"].(float64), 'f', -1, 64),
 		}
-	
+
 		return user, nil
 	} else {
 		return nil, fmt.Errorf("invalid token")
 	}
 }
 
-func (r *MoodleRepository) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
+func (r *Repository) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
 	// gradereport_user_get_grade_items
 
 	user, err := r.GetUserInfo(token)
@@ -134,13 +134,13 @@ func (r *MoodleRepository) GetUserCourseGrades(token string, courseID string) ([
 			gradeData["graderaw"] = 0.0
 			gradeData["gradedategraded"] = 0.0
 		}
-		
+
 		grade := Grade{
-			GradeName: gradeData["itemname"].(string),
-			Value: gradeData["graderaw"].(float64),
-			MaxValue: gradeData["grademax"].(float64),
+			GradeName:   gradeData["itemname"].(string),
+			Value:       gradeData["graderaw"].(float64),
+			MaxValue:    gradeData["grademax"].(float64),
 			UpdatedDate: int64(gradeData["gradedategraded"].(float64)),
-			
+
 			// ID:                int(courseData["id"].(float64)),
 			// Name:              courseData["displayname"].(string),
 			// EnrolledUserCount: int(courseData["enrolledusercount"].(float64)),
@@ -153,7 +153,7 @@ func (r *MoodleRepository) GetUserCourseGrades(token string, courseID string) ([
 	return grades, nil
 }
 
-func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
+func (r *Repository) GetUserAllCourses(token string) ([]Course, error) {
 	user, err := r.GetUserInfo(token)
 	if err != nil {
 		return nil, err
@@ -197,7 +197,7 @@ func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
 			Name:              courseData["displayname"].(string),
 			EnrolledUserCount: int(courseData["enrolledusercount"].(float64)),
 			Category:          strconv.FormatFloat(courseData["category"].(float64), 'f', -1, 64),
-			EndDate: 		   int64(courseData["enddate"].(float64)),
+			EndDate:           int64(courseData["enddate"].(float64)),
 			// You may need to handle other fields like 'completed', 'start_date', and 'end_date' based on your response structure.
 		}
 		courses[i] = course
@@ -206,7 +206,7 @@ func (r *MoodleRepository) GetUserAllCourses(token string) ([]Course, error) {
 	return courses, nil
 }
 
-func (r *MoodleRepository) GetDeadlines(token string) ([]Deadline, error) {
+func (r *Repository) GetDeadlines(token string) ([]Deadline, error) {
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_calendar_get_calendar_upcoming_view&moodlewsrestformat=json", r.MoodleAPILink, token)
 	fmt.Println("URL:", url)
 
@@ -260,8 +260,7 @@ func (r *MoodleRepository) GetDeadlines(token string) ([]Deadline, error) {
 	return deadlines, nil
 }
 
-// TODO Debug this code
-func (r *MoodleRepository) UploadFile(token, filePath, fileName, url string) (map[string]interface{}, error) {
+func (r *Repository) UploadFile(token, filePath, fileName, url string) (map[string]interface{}, error) {
 
 	client := &http.Client{}
 

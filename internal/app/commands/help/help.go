@@ -9,25 +9,29 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
 )
 
-type HelpCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (h *HelpCommand) Execute(_ []string) error {
+func (c *Command) Execute(_ []string) error {
 	fmt.Println("Available commands:")
 
-	availableCommands := h.CommandService.GetAvailableCommands()
+	availableCommands := c.CommandService.GetAvailableCommands()
 	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
 
 	for cmdName, cmd := range availableCommands {
 		row := fmt.Sprintf("    %s \t  %s", cmdName, cmd.Description())
-		fmt.Fprintln(tw, row)
+		if _, err := fmt.Fprintln(tw, row); err != nil {
+			return fmt.Errorf("error writing to tabwriter: %v", err)
+		}
 	}
-	tw.Flush()
+	if err := tw.Flush(); err != nil {
+		return fmt.Errorf("error flushing tabwriter: %v", err)
+	}
 
 	return nil
 }
 
-func (h *HelpCommand) Description() string {
+func (c *Command) Description() string {
 	return "Show available commands"
 }

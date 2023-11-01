@@ -11,10 +11,10 @@ import (
 )
 
 type App struct {
-	CommandService command.CommandService
+	CommandService command.Service
 }
 
-func NewApp(service command.CommandService) *App {
+func NewApp(service command.Service) *App {
 	return &App{
 		CommandService: service,
 	}

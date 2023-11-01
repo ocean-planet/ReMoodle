@@ -1,28 +1,28 @@
 package moodle
 
-type MoodleService struct {
-	Repository *MoodleRepository
+type Service struct {
+	Repository *Repository
 }
 
-func NewMoodleService(repo *MoodleRepository) *MoodleService {
-	return &MoodleService{
+func NewMoodleService(repo *Repository) *Service {
+	return &Service{
 		Repository: repo,
 	}
 }
 
-func (s *MoodleService) GetUserInfo(token string) (*User, error) {
+func (s *Service) GetUserInfo(token string) (*User, error) {
 	return s.Repository.GetUserInfo(token)
 }
 
-func (s *MoodleService) GetUserAllCourses(token string) ([]Course, error) {
+func (s *Service) GetUserAllCourses(token string) ([]Course, error) {
 	return s.Repository.GetUserAllCourses(token)
 }
 
-func (s *MoodleService) GetDeadlines(token string) ([]Deadline, error) {
+func (s *Service) GetDeadlines(token string) ([]Deadline, error) {
 	return s.Repository.GetDeadlines(token)
 }
 
-func (s *MoodleService) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
+func (s *Service) GetUserCourseGrades(token string, courseID string) ([]Grade, error) {
 	return s.Repository.GetUserCourseGrades(token, courseID)
 }
 

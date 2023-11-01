@@ -11,11 +11,11 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
-type LoginCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (h *LoginCommand) Execute(_ []string) error {
+func (c *Command) Execute(_ []string) error {
 
 	loadToken, loadTokenErr := core.LoadToken()
 
@@ -33,7 +33,7 @@ func (h *LoginCommand) Execute(_ []string) error {
 
 	token = strings.TrimSpace(token)
 
-	moodleRepository := moodle.NewMoodleRepository(h.CommandService.ApiLink)
+	moodleRepository := moodle.NewMoodleRepository(c.CommandService.ApiLink)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
 	userInfo, tokenErr := moodleService.GetUserInfo(token)
@@ -53,6 +53,6 @@ func (h *LoginCommand) Execute(_ []string) error {
 	return nil
 }
 
-func (h *LoginCommand) Description() string {
+func (c *Command) Description() string {
 	return "Login to Moodle"
 }

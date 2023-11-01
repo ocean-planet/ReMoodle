@@ -13,7 +13,7 @@ func main() {
 	apiLink := "https://moodle.astanait.edu.kz/webservice/rest/server.php?wstoken=" + apiToken
 	repo := moodle.NewMoodleRepository(apiLink)
 
-	// Replace "yourtoken" with your actual Moodle API token.
+	// Replace "your_token" with your actual Moodle API token.
 
 	// Example 1: Get user information
 	userInfo, err := repo.GetUserInfo(apiToken)

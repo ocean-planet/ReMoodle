@@ -10,15 +10,15 @@ import (
 	"github.com/ocean-planet/ReMoodle/internal/app/moodle"
 )
 
-type GradesCommand struct {
-	CommandService command.CommandService
+type Command struct {
+	CommandService command.Service
 }
 
-func (g *GradesCommand) Description() string {
+func (c *Command) Description() string {
 	return "shows grades for a course (takes courseID as an argument)"
 }
 
-func (g *GradesCommand) Execute(args []string) error {
+func (c *Command) Execute(args []string) error {
 	token, tokenErr := core.LoadToken()
 
 	if tokenErr != nil {
@@ -63,11 +63,11 @@ func (g *GradesCommand) Execute(args []string) error {
 		)
 
 		if _, err := fmt.Fprintln(tw, row); err != nil {
-			return fmt.Errorf("Error writing to tabwriter: %v", err)
+			return fmt.Errorf("error writing to tabwriter: %v", err)
 		}
 	}
 	if err := tw.Flush(); err != nil {
-		return fmt.Errorf("Error flushing tabwriter: %v", err)
+		return fmt.Errorf("error flushing tabwriter: %v", err)
 	}
 	fmt.Println()
 
