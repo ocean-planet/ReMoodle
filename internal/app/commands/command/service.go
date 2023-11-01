@@ -2,11 +2,12 @@ package command
 
 type CommandService struct {
 	CommandRepository *CommandRepository
+	ApiLink           string
 }
 
-func NewCommandService(repository *CommandRepository) CommandService {
+func NewCommandService(repository *CommandRepository, apiLink string) CommandService {
 	commandRepository := repository
-	return CommandService{CommandRepository: commandRepository}
+	return CommandService{CommandRepository: commandRepository, ApiLink: apiLink}
 }
 
 func (cs *CommandService) RegisterCommand(name string, cmd Command) {

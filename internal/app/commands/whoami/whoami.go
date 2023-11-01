@@ -22,7 +22,7 @@ func (h *WhoamiCommand) Execute(_ []string) error {
 		return err
 	}
 
-	apiLink := "https://moodle.astanait.edu.kz/webservice/rest/server.php"
+	apiLink := h.CommandService.ApiLink
 	repo := moodle.NewMoodleRepository(apiLink)
 
 	userInfo, err := repo.GetUserInfo(token)
@@ -33,8 +33,12 @@ func (h *WhoamiCommand) Execute(_ []string) error {
 	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.Debug)
 	row := fmt.Sprintf("User Info:\nBarcode \t %s\nFull Name \t %s\nUser ID \t %s\n", userInfo.Barcode, userInfo.FullName, userInfo.UserID)
 
-	fmt.Fprintln(tw, row)
-	tw.Flush()
+	if _, err := fmt.Fprintln(tw, row); err != nil {
+		return fmt.Errorf("Error writing to tabwriter: %v", err)
+	}
+	if err := tw.Flush(); err != nil {
+		return fmt.Errorf("Error flushing tabwriter: %v", err)
+	}
 
 	return nil
 }

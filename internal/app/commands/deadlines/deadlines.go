@@ -17,14 +17,14 @@ type DeadlineCommand struct {
 	CommandService command.CommandService
 }
 
-func (d *DeadlineCommand) Execute(args []string) error {
+func (d *DeadlineCommand) Execute(_ []string) error {
 	token, tokenErr := core.LoadToken()
 
-	if (tokenErr != nil) {
+	if tokenErr != nil {
 		return tokenErr
 	}
 
-	moodleRepository := moodle.NewMoodleRepository("https://moodle.astanait.edu.kz/webservice/rest/server.php")
+	moodleRepository := moodle.NewMoodleRepository(d.CommandService.ApiLink)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
 	deadlines, err := moodleService.GetDeadlines(token)
@@ -50,22 +50,27 @@ func (d *DeadlineCommand) Execute(args []string) error {
 		}
 
 		row := fmt.Sprintf("📋  %s\t 📚  %s\t 📅 Date: %s\t ⌚ Time left: %s",
-            deadline.DeadlineName,
-            strings.Split(deadline.CourseName, " | ")[0],
-            GetDateString(deadline.Remaining),
-            GetRemainingString(deadline.Remaining),
-        )
+			deadline.DeadlineName,
+			strings.Split(deadline.CourseName, " | ")[0],
+			GetDateString(deadline.Remaining),
+			GetRemainingString(deadline.Remaining),
+		)
 
-        fmt.Fprintln(tw, row)
+		if _, err := fmt.Fprintln(tw, row); err != nil {
+			return fmt.Errorf("Error writing to tabwriter: %v", err)
+		}
 	}
-    tw.Flush()
+	if err := tw.Flush(); err != nil {
+		return fmt.Errorf("Error flushing tabwriter: %v", err)
+	}
+
 	fmt.Println()
 
 	return nil
 }
 
 func (d *DeadlineCommand) Description() string {
-	return "shows all active deadlines"
+	return "Shows all active deadlines"
 }
 
 func GetDateString(unixtimestamp int64) string {
@@ -73,7 +78,7 @@ func GetDateString(unixtimestamp int64) string {
 	return deadlineTime.Format("2006-01-02 15:04:05")
 }
 
-func GetRemainingString(unixtimestamp int64) string {	
+func GetRemainingString(unixtimestamp int64) string {
 	finalString := ""
 
 	currentTime := time.Now()

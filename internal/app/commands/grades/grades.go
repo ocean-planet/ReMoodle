@@ -18,16 +18,16 @@ func (g *GradesCommand) Description() string {
 	return "shows grades for a course (takes courseID as an argument)"
 }
 
-
 func (g *GradesCommand) Execute(args []string) error {
 	token, tokenErr := core.LoadToken()
 
-	if (tokenErr != nil) {
+	if tokenErr != nil {
 		return tokenErr
 	}
 
 	if len(args) < 1 {
 		fmt.Println("Usage: courses [courseID]")
+		return command.ErrNotEnoughArguments
 	}
 
 	courseID := args[0]
@@ -53,18 +53,22 @@ func (g *GradesCommand) Execute(args []string) error {
 
 	for _, grade := range grades {
 
-		if (len(grade.GradeName) < 2) {
+		if len(grade.GradeName) < 2 {
 			continue
 		}
 
 		row := fmt.Sprintf("📋  %s \t  %.2f",
-            grade.GradeName,
+			grade.GradeName,
 			grade.Value,
-        )
+		)
 
-        fmt.Fprintln(tw, row)
+		if _, err := fmt.Fprintln(tw, row); err != nil {
+			return fmt.Errorf("Error writing to tabwriter: %v", err)
+		}
 	}
-    tw.Flush()
+	if err := tw.Flush(); err != nil {
+		return fmt.Errorf("Error flushing tabwriter: %v", err)
+	}
 	fmt.Println()
 
 	return nil

@@ -33,7 +33,7 @@ func (h *LoginCommand) Execute(_ []string) error {
 
 	token = strings.TrimSpace(token)
 
-	moodleRepository := moodle.NewMoodleRepository("https://moodle.astanait.edu.kz/webservice/rest/server.php")
+	moodleRepository := moodle.NewMoodleRepository(h.CommandService.ApiLink)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
 	userInfo, tokenErr := moodleService.GetUserInfo(token)

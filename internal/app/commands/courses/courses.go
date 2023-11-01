@@ -13,19 +13,18 @@ type CoursesCommand struct {
 	CommandService command.CommandService
 }
 
-// Description implements command.Command.
 func (*CoursesCommand) Description() string {
-	return "shows current courses"
+	return "Shows current courses"
 }
 
-func (c *CoursesCommand) Execute(args []string) error {
+func (c *CoursesCommand) Execute(_ []string) error {
 	token, tokenErr := core.LoadToken()
 
 	if tokenErr != nil {
 		return tokenErr
 	}
 
-	moodleRepository := moodle.NewMoodleRepository("https://moodle.astanait.edu.kz/webservice/rest/server.php")
+	moodleRepository := moodle.NewMoodleRepository(c.CommandService.ApiLink)
 	moodleService := moodle.NewMoodleService(moodleRepository)
 
 	courses, err := moodleService.GetUserAllCourses(token)

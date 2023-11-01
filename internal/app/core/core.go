@@ -30,7 +30,12 @@ func (a *App) RegisterCommand(name string, cmd command.Command) {
 
 func (a *App) Run(args []string) error {
 	if len(args) < 1 {
-		fmt.Println("Usage: myapp <command> [args]")
+		fmt.Println("Usage: remoodle <command> [args]")
+		cmd, _ := a.CommandService.GetCommand("help")
+		err := cmd.Execute(nil)
+		if err != nil {
+			return err
+		}
 		return nil
 	}
 
@@ -82,17 +87,16 @@ func LoadToken() (string, error) {
 }
 
 func DeleteToken() error {
-    configDir, err := os.UserConfigDir()
-    if err != nil {
-        return err
-    }
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return err
+	}
 
-    tokenFile := filepath.Join(configDir, ConfigDirName, TokenFileName)
-    err = os.Remove(tokenFile)
-    if err != nil {
-        return err
-    }
+	tokenFile := filepath.Join(configDir, ConfigDirName, TokenFileName)
+	err = os.Remove(tokenFile)
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
-

@@ -12,7 +12,7 @@ type LogoutCommand struct {
 }
 
 func (l *LogoutCommand) Description() string {
-	return "delete your token"
+	return "Delete your token"
 }
 
 func (l *LogoutCommand) Execute(_ []string) error {

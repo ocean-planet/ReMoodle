@@ -16,7 +16,7 @@ import (
 
 func main() {
 	commandRepository := command.NewCommandRepository()
-	commandService := command.NewCommandService(commandRepository)
+	commandService := command.NewCommandService(commandRepository, "https://moodle.astanait.edu.kz/webservice/rest/server.php")
 	myApp := core.NewApp(commandService)
 
 	commandRepository.RegisterCommand("help", &help.HelpCommand{CommandService: commandService})
