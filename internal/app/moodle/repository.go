@@ -24,7 +24,7 @@ func NewMoodleRepository(apiLink string) *Repository {
 
 func (r *Repository) GetUserInfo(token string) (*User, error) {
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json", r.MoodleAPILink, token)
-	fmt.Println("URL:", url) // Debugging: Print the URL
+	//fmt.Println("URL:", url) // Debugging: Print the URL
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -38,7 +38,7 @@ func (r *Repository) GetUserInfo(token string) (*User, error) {
 		}
 	}(resp.Body)
 
-	fmt.Println("Response Status Code:", resp.Status)
+	//fmt.Println("Response Status Code:", resp.Status)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("moodle API request failed with status code %d", resp.StatusCode)
@@ -74,7 +74,7 @@ func (r *Repository) GetUserCourseGrades(token string, courseID string) ([]Grade
 	userID := user.UserID
 
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&userid=%s&courseid=%s", r.MoodleAPILink, token, userID, courseID)
-	fmt.Println("URL:", url)
+	//fmt.Println("URL:", url)
 
 	resp, err := http.Get(url)
 
@@ -90,7 +90,7 @@ func (r *Repository) GetUserCourseGrades(token string, courseID string) ([]Grade
 		}
 	}(resp.Body)
 
-	fmt.Println("Response Status Code:", resp.Status)
+	//fmt.Println("Response Status Code:", resp.Status)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("moodle API request failed with status code %d", resp.StatusCode)
@@ -161,7 +161,7 @@ func (r *Repository) GetUserAllCourses(token string) ([]Course, error) {
 	userID := user.UserID
 
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=%s", r.MoodleAPILink, token, userID)
-	fmt.Println("URL:", url)
+	//fmt.Println("URL:", url)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -175,7 +175,7 @@ func (r *Repository) GetUserAllCourses(token string) ([]Course, error) {
 		}
 	}(resp.Body)
 
-	fmt.Println("Response Status Code:", resp.Status)
+	//fmt.Println("Response Status Code:", resp.Status)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("moodle API request failed with status code %d", resp.StatusCode)
@@ -208,7 +208,7 @@ func (r *Repository) GetUserAllCourses(token string) ([]Course, error) {
 
 func (r *Repository) GetDeadlines(token string) ([]Deadline, error) {
 	url := fmt.Sprintf("%s?wstoken=%s&wsfunction=core_calendar_get_calendar_upcoming_view&moodlewsrestformat=json", r.MoodleAPILink, token)
-	fmt.Println("URL:", url)
+	//fmt.Println("URL:", url)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -222,7 +222,7 @@ func (r *Repository) GetDeadlines(token string) ([]Deadline, error) {
 		}
 	}(resp.Body)
 
-	fmt.Println("Response Status Code:", resp.Status)
+	//fmt.Println("Response Status Code:", resp.Status)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("moodle API request failed with status code %d", resp.StatusCode)

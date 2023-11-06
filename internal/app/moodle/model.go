@@ -21,6 +21,7 @@ type Deadline struct {
 	CourseName   string `json:"course_name"`
 	DeadlineName string `json:"deadline_name"`
 	Remaining    int64  `json:"remaining"`
+	MarkDone     bool   `json:"mark_done"`
 }
 
 type Grade struct {
