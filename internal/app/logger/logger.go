@@ -1,38 +1,64 @@
 package logger
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"sync"
 )
 
-type Logger struct {
+type Logger interface {
+	Log(message string)
+}
+
+type DefaultLogger struct {
 	log *log.Logger
 }
 
-var instance *Logger
+func (l *DefaultLogger) Log(message string) {
+	l.log.Println(message)
+}
+
+type Decorator interface {
+	Log(message string)
+}
+
+type BaseDecorator struct {
+	Logger Logger
+}
+
+func (d *BaseDecorator) Log(message string) {
+	d.Logger.Log(message)
+}
+
+type LogDecorator struct {
+	*BaseDecorator
+	Prefix string
+}
+
+func (d *LogDecorator) Log(message string) {
+	fmt.Printf("%s: %s\n", d.Prefix, message)
+}
+
+var instance *DefaultLogger
 var once sync.Once
 
-func GetInstance() *Logger {
+func GetInstance() *DefaultLogger {
 	once.Do(func() {
-		instance = createLogger()
+		file, err := os.Create("remoodle.log")
+		if err != nil {
+			log.Fatalf("Error creating log file: %v", err)
+		}
+
+		instance = &DefaultLogger{log: log.New(file, "", log.Ldate|log.Ltime)}
 	})
 	return instance
 }
 
-func createLogger() *Logger {
-	file, err := os.Create("remoodle.log")
-	if err != nil {
-		log.Fatalf("Error creating log file: %v", err)
-	}
-
-	return &Logger{log: log.New(file, "", log.Ldate|log.Ltime)}
+func LogWithPrefix(prefix string, message ...string) {
+	GetInstance().log.Println(prefix, ":", message)
 }
 
-//func (l *Logger) Log(message string) {
-//	l.log.Println(message)
-//}
-
-func Log(message ...string) {
-	GetInstance().log.Println(message)
+func LogWithDecorator(decorator Decorator, message string) {
+	decorator.Log(message)
 }

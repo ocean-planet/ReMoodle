@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ocean-planet/ReMoodle/internal/app/logger"
 	"os"
 
 	"github.com/ocean-planet/ReMoodle/internal/app/commands/command"
@@ -15,6 +16,12 @@ import (
 )
 
 func main() {
+
+	defaultLogger := logger.GetInstance()
+	defaultLogger.Log("Init logger")
+	decorator := &logger.LogDecorator{BaseDecorator: &logger.BaseDecorator{Logger: defaultLogger}, Prefix: "DEBUG"}
+	logger.LogWithDecorator(decorator, "Debug logger mode is enabled")
+
 	commandRepository := command.NewCommandRepository()
 	commandService := command.NewCommandService(commandRepository, "https://moodle.astanait.edu.kz/webservice/rest/server.php")
 	myApp := core.NewApp(commandService)
